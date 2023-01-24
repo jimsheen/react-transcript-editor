@@ -32,6 +32,8 @@ jobs:
           node-version: "14.x"
           registry-url: "https://npm.pkg.github.com"
           scope: "@jimsheen"
+      - name: Install
+        run: yarn
       - name: Pre Publish
         run: yarn pre:publish
       - name: Publish to GitHub Packages
