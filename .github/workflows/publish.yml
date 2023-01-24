@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "16.x"
-          registry-url: "https://yarn .pkg.github.com"
+          registry-url: "https://npm.pkg.github.com"
           scope: "@jimsheen"
       - name: Create a .npmrc file for the github private repository
         uses: FerLuisxd/create-npmrc@3
@@ -43,6 +43,6 @@ jobs:
         run: yarn  install
       - run: yarn  run pre:publish
       - name: Publish to GitHub Packages
-        run: yarn  publish
+        run: yarn  publish ./dist
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
