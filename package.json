@@ -1,7 +1,7 @@
 {
-  "name": "@jimsheen/react-transcript-editor",
+  "name": "@bbc/react-transcript-editor",
   "description": "A React component to make transcribing audio and video easier and faster.",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "keywords": [
     "transcript",
     "transcriptions",
@@ -135,5 +135,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "publishConfig": {
+    "@jimsheen/react-transcript-editor": "https://npm.pkg.github.com"
+  }
 }

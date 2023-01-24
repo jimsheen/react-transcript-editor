@@ -52,7 +52,6 @@ class TranscriptEditor extends React.Component {
       previewIsDisplayed: true,
       mediaDuration: "00:00:00:00",
       gridDisplay: null,
-      isAutoSaveEnabled: true,
     };
     this.timedTextEditorRef = React.createRef();
   }
@@ -447,10 +446,11 @@ class TranscriptEditor extends React.Component {
         showSpeakers={this.state.showSpeakers}
         ref={this.timedTextEditorRef}
         handleAnalyticsEvents={this.props.handleAnalyticsEvents}
-        isAutoSaveEnabled={this.isAutoSaveEnabled}
+        isAutoSaveEnabled={this.props.isAutoSaveEnabled}
         handleAutoSaveChanges={this.handleAutoSaveChanges}
         autoSaveContentType={contentFormat}
         title={this.props.title ? this.props.title : Date.now()}
+        externalSave={this.props.externalSave}
       />
     );
 
@@ -511,6 +511,11 @@ TranscriptEditor.propTypes = {
   transcriptData: PropTypes.object,
   mediaType: PropTypes.string,
   isAutoSaveEnabled: PropTypes.bool,
+  externalSave: PropTypes.func,
+};
+
+TranscriptEditor.defaultProps = {
+  isAutoSaveEnabled: true,
 };
 
 export default TranscriptEditor;

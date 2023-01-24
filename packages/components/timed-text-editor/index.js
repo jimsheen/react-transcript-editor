@@ -23,6 +23,8 @@ class TimedTextEditor extends React.Component {
   constructor(props) {
     super(props);
 
+    console.log("props :>> ", props);
+
     this.state = {
       editorState: EditorState.createEmpty(),
     };
@@ -65,6 +67,11 @@ class TimedTextEditor extends React.Component {
     // outside of draftJS eg when clicking play button so using this instead
     // see issue https://github.com/facebook/draft-js/issues/1060
     // also "insert-characters" does not get triggered if you delete text
+
+    console.log(
+      "this.props.isAutoSaveEnabled :>> ",
+      this.props.isAutoSaveEnabled
+    );
 
     if (
       !isEqual(
@@ -109,6 +116,15 @@ class TimedTextEditor extends React.Component {
             }
           );
         }, 1000);
+      }
+
+      if (!this.props.isAutoSaveEnabled && this.props.externalSave) {
+        const data = this.getEditorContent(
+          this.props.autoSaveContentType,
+          this.props.title
+        );
+
+        this.props.externalSave(data);
       }
     }
 
@@ -621,6 +637,7 @@ TimedTextEditor.propTypes = {
   showTimecodes: PropTypes.bool,
   fileName: PropTypes.string,
   isAutoSaveEnabled: PropTypes.bool,
+  externalSave: PropTypes.func,
 };
 
 export default TimedTextEditor;
