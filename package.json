@@ -23,11 +23,11 @@
     "build:component": "webpack --config webpack.config.js",
     "build:storybook": "rimraf build && build-storybook -c .storybook -o build",
     "build:storybook:serve": "npx serve build",
-    "deploy:ghpages": "rimraf build && npm run build:storybook && gh-pages -d build",
-    "pre:publish": "npm run build:component && /bin/cp -rf package.json dist && /bin/cp -rf README.md dist",
-    "pre:publish-dev": "npm run build:component && /bin/cp -rf package.json dist && /bin/cp -rf README.md dist && yalc publish",
-    "publish:public": "npm run pre:publish && npm publish dist --access public",
-    "publish:dry:run": "npm publish --dry-run"
+    "deploy:ghpages": "rimraf build && yarn run build:storybook && gh-pages -d build",
+    "pre:publish": "yarn run build:component && /bin/cp -rf package.json dist && /bin/cp -rf README.md dist",
+    "pre:publish-dev": "yarn run build:component && /bin/cp -rf package.json dist && /bin/cp -rf README.md dist && yalc publish",
+    "publish:public": "yarn run pre:publish && yarn publish dist --access public",
+    "publish:dry:run": "yarn publish --dry-run"
   },
   "jest": {
     "moduleFileExtensions": [

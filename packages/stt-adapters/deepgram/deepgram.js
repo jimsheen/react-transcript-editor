@@ -96,7 +96,7 @@ const deepgram = (deepgramJson) => {
   let speakerSegmentation = null;
   let wordsByParagraphs = [];
 
-  const hasSpeakers = !!deepgramJson.words[0].speaker !== undefined;
+  const hasSpeakers = !!deepgramJson.words[0]?.speaker;
 
   // BBC Octo Labs API Response wraps Kaldi response around retval,
   // while kaldi contains word attribute at root
