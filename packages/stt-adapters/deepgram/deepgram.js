@@ -35,7 +35,9 @@ const groupWordsInParagraphs = (words) => {
 };
 
 function groupWordsBySpeaker(wordsWithSpeakers) {
-  let currentSpeaker = wordsWithSpeakers[0].speaker;
+  let currentSpeaker = !!wordsWithSpeakers[0]
+    ? wordsWithSpeakers[0]?.speaker
+    : null;
 
   const results = [];
   let paragraph = { words: [], text: "", speaker: "" };
