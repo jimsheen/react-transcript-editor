@@ -23,8 +23,6 @@ class TimedTextEditor extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log("props :>> ", props);
-
     this.state = {
       editorState: EditorState.createEmpty(),
     };
