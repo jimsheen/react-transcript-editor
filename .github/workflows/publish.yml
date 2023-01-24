@@ -5,38 +5,38 @@ on:
   # tags:
   #   - "v*"
 
-  jobs:
-    # release:
-    #   runs-on: ubuntu-latest
-    #   steps:
-    #     - name: Checkout code
-    #       uses: actions/checkout@v3
-    #     - name: Create Release
-    #       id: create_release
-    #       uses: marvinpinto/action-automatic-releases@latest
-    #       env:
-    #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #       with:
-    #         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-    #         automatic_release_tag: "latest"
-    #         prerelease: false
-    #         title: ${{ github.ref }}
+jobs:
+  # release:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Create Release
+  #       id: create_release
+  #       uses: marvinpinto/action-automatic-releases@latest
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         repo_token: "${{ secrets.GITHUB_TOKEN }}"
+  #         automatic_release_tag: "latest"
+  #         prerelease: false
+  #         title: ${{ github.ref }}
 
-    publish:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - name: Setup .npmrc file to publish to GitHub Packages
-          uses: actions/setup-node@v3
-          with:
-            node-version: "14.x"
-            registry-url: "https://npm.pkg.github.com"
-            scope: "@jimsheen"
-        - name: Install
-          run: yarn
-        - name: Pre Publish
-          run: yarn pre:publish
-        - name: Publish to GitHub Packages
-          run: yarn publish ./dist
-          env:
-            NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .npmrc file to publish to GitHub Packages
+        uses: actions/setup-node@v3
+        with:
+          node-version: "14.x"
+          registry-url: "https://npm.pkg.github.com"
+          scope: "@jimsheen"
+      - name: Install
+        run: yarn
+      - name: Pre Publish
+        run: yarn pre:publish
+      - name: Publish to GitHub Packages
+        run: yarn publish ./dist
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
