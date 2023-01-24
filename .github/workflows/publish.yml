@@ -1,48 +1,40 @@
 name: Release & Publish
 
 on:
-  push
-  # push:
-  #   tags:
-  #     - 'v*'
+  push:
+    # tags:
+    #   - "v*"
 
 jobs:
-  # release:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v2
-  #     - name: Create Release
-  #       id: create_release
-  #       uses: actions/create-release@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         tag_name: ${{ github.ref }}
-  #         release_name: ${{ github.ref }}
-  #         draft: false
-  #         prerelease: false
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Create Release
+        id: create_release
+        uses: marvinpinto/action-automatic-releases@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: ${{ github.ref }}
 
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Setup .npmrc file to publish to GitHub Packages
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
+          node-version: "14.x"
           registry-url: "https://npm.pkg.github.com"
           scope: "@jimsheen"
-      - name: Create a .npmrc file for the github private repository
-        uses: FerLuisxd/create-npmrc@3
-        with:
-          org_name: jimsheen
-        env:
-          AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install modules
-        run: yarn  install
-      - run: yarn  run pre:publish
+      - name: Pre Publish
+        run: yarn pre:publish
       - name: Publish to GitHub Packages
-        run: yarn  publish ./dist
+        run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
