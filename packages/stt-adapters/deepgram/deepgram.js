@@ -73,21 +73,23 @@ const groupWordsInParagraphsBySpeakers = (words) => {
   const results = [];
   let paragraph = { words: [], text: [] };
 
-  words.forEach((word) => {
-    // if word contains punctuation
-    if (/[.?!]/.test(word.punctuated_word)) {
-      paragraph.words.push(word);
-      paragraph.text.push(word.punctuated_word);
-      paragraph.text = paragraph.text.join(" ");
-      paragraph.speaker = word.speaker;
-      results.push(paragraph);
-      // reset paragraph
-      paragraph = { words: [], text: [] };
-    } else {
-      paragraph.words.push(word);
-      paragraph.text.push(word.punctuated_word);
-    }
-  });
+  if (!!words?.length) {
+    words.forEach((word) => {
+      // if word contains punctuation
+      if (/[.?!]/.test(word.punctuated_word)) {
+        paragraph.words.push(word);
+        paragraph.text.push(word.punctuated_word);
+        paragraph.text = paragraph.text.join(" ");
+        paragraph.speaker = word.speaker;
+        results.push(paragraph);
+        // reset paragraph
+        paragraph = { words: [], text: [] };
+      } else {
+        paragraph.words.push(word);
+        paragraph.text.push(word.punctuated_word);
+      }
+    });
+  }
 
   return results;
 };
