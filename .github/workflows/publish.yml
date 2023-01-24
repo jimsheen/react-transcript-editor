@@ -30,7 +30,7 @@ jobs:
       - name: Setup .npmrc file to publish to GitHub Packages
         uses: actions/setup-node@v1
         with:
-          node-version: "14.x"
+          node-version: "16.x"
           registry-url: "https://yarn .pkg.github.com"
           scope: "@jimsheen"
       - name: Create a .npmrc file for the github private repository
