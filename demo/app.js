@@ -9,10 +9,10 @@ import { faGithub } from "@fortawesome/free-brands-svg-icons";
 import {
   loadLocalSavedData,
   isPresentInLocalStorage,
-  localSave
+  localSave,
 } from "./local-storage.js";
 
-import DEMO_TRANSCRIPT from "./sample-data/KateDarling-bbcKaldiTranscriptWithSpeakerSegments.json";
+import DEMO_TRANSCRIPT from "../packages/stt-adapters/deepgram/samples/deepgram-test-sample.json";
 const DEMO_MEDIA_URL =
   "https://download.ted.com/talks/KateDarling_2018S-950k.mp4";
 const DEMO_TITLE =
@@ -29,41 +29,45 @@ class App extends React.Component {
       mediaUrl: null,
       isTextEditable: true,
       spellCheck: false,
-      sttType: "bbckaldi",
+      sttType: "deepgram",
       analyticsEvents: [],
       title: "",
       fileName: "",
       autoSaveData: {},
       autoSaveContentType: "draftjs",
-      autoSaveExtension: "json"
+      autoSaveExtension: "json",
     };
 
     this.transcriptEditorRef = React.createRef();
   }
 
   loadDemo = () => {
-    if(isPresentInLocalStorage(DEMO_MEDIA_URL)){
-      const transcriptDataFromLocalStorage = loadLocalSavedData(DEMO_MEDIA_URL)
+    if (isPresentInLocalStorage(DEMO_MEDIA_URL)) {
+      const transcriptDataFromLocalStorage = loadLocalSavedData(DEMO_MEDIA_URL);
+
+      console.log(
+        "transcriptDataFromLocalStorage :>> ",
+        transcriptDataFromLocalStorage
+      );
+
       this.setState({
         transcriptData: transcriptDataFromLocalStorage,
         mediaUrl: DEMO_MEDIA_URL,
         title: DEMO_TITLE,
-        sttType: 'draftjs'
+        sttType: "draftjs",
       });
-    }
-    else{
-       this.setState({
+    } else {
+      this.setState({
         transcriptData: DEMO_TRANSCRIPT,
         mediaUrl: DEMO_MEDIA_URL,
         title: DEMO_TITLE,
-        sttType: "bbckaldi"
+        sttType: "bbckaldi",
       });
     }
-   
   };
 
   // https://stackoverflow.com/questions/8885701/play-local-hard-drive-video-file-with-html5-video-tag
-  handleLoadMedia = files => {
+  handleLoadMedia = (files) => {
     const file = files[0];
     const videoNode = document.createElement("video");
     const canPlay = videoNode.canPlayType(file.type);
@@ -73,7 +77,7 @@ class App extends React.Component {
       this.setState({
         // transcriptData: DEMO_TRANSCRIPT,
         mediaUrl: fileURL,
-        fileName: file.name
+        fileName: file.name,
       });
     } else {
       alert("Select a valid audio or video file.");
@@ -85,19 +89,19 @@ class App extends React.Component {
 
     this.setState({
       // transcriptData: DEMO_TRANSCRIPT,
-      mediaUrl: fileURL
+      mediaUrl: fileURL,
     });
   };
 
-  handleLoadTranscriptJson = files => {
+  handleLoadTranscriptJson = (files) => {
     const file = files[0];
 
     if (file.type === "application/json") {
       const fileReader = new FileReader();
 
-      fileReader.onload = event => {
+      fileReader.onload = (event) => {
         this.setState({
-          transcriptData: JSON.parse(event.target.result)
+          transcriptData: JSON.parse(event.target.result),
         });
       };
 
@@ -107,24 +111,24 @@ class App extends React.Component {
     }
   };
 
-  handleIsTextEditable = e => {
+  handleIsTextEditable = (e) => {
     this.setState({
-      isTextEditable: e.target.checked
+      isTextEditable: e.target.checked,
     });
   };
 
-  handleSpellCheck = e => {
+  handleSpellCheck = (e) => {
     this.setState({
-      spellCheck: e.target.checked
+      spellCheck: e.target.checked,
     });
   };
 
   // https://stackoverflow.com/questions/21733847/react-jsx-selecting-selected-on-selected-select-option
-  handleSttTypeChange = event => {
+  handleSttTypeChange = (event) => {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handleExportFormatChange = event => {
+  handleExportFormatChange = (event) => {
     console.log(event.target.name, event.target.value);
     this.setState({ [event.target.name]: event.target.value });
   };
@@ -165,25 +169,25 @@ class App extends React.Component {
     console.info("Cleared local storage.");
   };
 
-  handleAnalyticsEvents = event => {
+  handleAnalyticsEvents = (event) => {
     this.setState({ analyticsEvents: [...this.state.analyticsEvents, event] });
   };
 
-  handleChangeTranscriptTitle = newTitle => {
+  handleChangeTranscriptTitle = (newTitle) => {
     this.setState({
-      title: newTitle
+      title: newTitle,
     });
   };
 
-  handleChangeTranscriptName = value => {
+  handleChangeTranscriptName = (value) => {
     this.setState({ fileName: value });
   };
 
-  handleAutoSaveChanges = newAutoSaveData => {
+  handleAutoSaveChanges = (newAutoSaveData) => {
     console.log("handleAutoSaveChanges", newAutoSaveData);
     const { data, ext } = newAutoSaveData;
     this.setState({ autoSaveData: data, autoSaveExtension: ext });
-    // Saving to local storage 
+    // Saving to local storage
     localSave(this.state.mediaUrl, this.state.fileName, data);
   };
   render() {
@@ -214,7 +218,7 @@ class App extends React.Component {
             <input
               type={"file"}
               id={"mediaFile"}
-              onChange={e => this.handleLoadMedia(e.target.files)}
+              onChange={(e) => this.handleLoadMedia(e.target.files)}
             />
             <label htmlFor="mediaFile">From Computer</label>
             {this.state.fileName !== "" ? (
@@ -236,7 +240,7 @@ class App extends React.Component {
             <input
               type={"file"}
               id={"transcriptFile"}
-              onChange={e => this.handleLoadTranscriptJson(e.target.files)}
+              onChange={(e) => this.handleLoadTranscriptJson(e.target.files)}
             />
             <label htmlFor="transcriptFile">From Computer</label>
             {this.state.transcriptData !== null ? (
@@ -263,7 +267,7 @@ class App extends React.Component {
             <input
               type="text"
               value={this.state.title}
-              onChange={e => this.handleChangeTranscriptTitle(e.target.value)}
+              onChange={(e) => this.handleChangeTranscriptTitle(e.target.value)}
             />
           </section>
 
@@ -321,7 +325,7 @@ class App extends React.Component {
           ref={this.transcriptEditorRef}
           handleAutoSaveChanges={this.handleAutoSaveChanges}
           autoSaveContentType={this.state.autoSaveContentType}
-          mediaType={ 'video' }
+          mediaType={"video"}
         />
 
         <section style={{ height: "250px", width: "50%", float: "left" }}>

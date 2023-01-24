@@ -4,24 +4,24 @@
  *
  */
 
-import generateEntitiesRanges from '../generate-entities-ranges/index.js';
-import groupWordsInParagraphsBySpeakers from './group-words-by-speakers.js';
+import generateEntitiesRanges from "../generate-entities-ranges/index.js";
+import groupWordsInParagraphsBySpeakers from "./group-words-by-speakers.js";
 /**
  * groups words list from kaldi transcript based on punctuation.
  * @todo To be more accurate, should introduce an honorifics library to do the splitting of the words.
  * @param {array} words - array of words opbjects from kaldi transcript
  */
 
-const groupWordsInParagraphs = words => {
+const groupWordsInParagraphs = (words) => {
   const results = [];
   let paragraph = { words: [], text: [] };
 
-  words.forEach(word => {
+  words.forEach((word) => {
     // if word contains punctuation
     if (/[.?!]/.test(word.punct)) {
       paragraph.words.push(word);
       paragraph.text.push(word.punct);
-      paragraph.text = paragraph.text.join(' ');
+      paragraph.text = paragraph.text.join(" ");
       results.push(paragraph);
       // reset paragraph
       paragraph = { words: [], text: [] };
@@ -34,7 +34,7 @@ const groupWordsInParagraphs = words => {
   return results;
 };
 
-const bbcKaldiToDraft = bbcKaldiJson => {
+const bbcKaldiToDraft = (bbcKaldiJson) => {
   const results = [];
   let tmpWords;
   let speakerSegmentation = null;
@@ -57,29 +57,34 @@ const bbcKaldiToDraft = bbcKaldiJson => {
   if (speakerSegmentation === null) {
     wordsByParagraphs = groupWordsInParagraphs(tmpWords);
   } else {
-    wordsByParagraphs = groupWordsInParagraphsBySpeakers(tmpWords, speakerSegmentation);
+    wordsByParagraphs = groupWordsInParagraphsBySpeakers(
+      tmpWords,
+      speakerSegmentation
+    );
   }
+
+  console.log("wordsByParagraphs :>> ", wordsByParagraphs);
 
   wordsByParagraphs.forEach((paragraph, i) => {
     // if paragraph contain words
     // eg sometimes the speaker segmentation might not contain words :man-shrugging:
     if (paragraph.words[0] !== undefined) {
-      let speakerLabel = `TBC ${ i }`;
+      let speakerLabel = `TBC ${i}`;
       if (speakerSegmentation !== null) {
         speakerLabel = paragraph.speaker;
       }
 
       const draftJsContentBlockParagraph = {
         text: paragraph.text,
-        type: 'paragraph',
+        type: "paragraph",
         data: {
           speaker: speakerLabel,
           words: paragraph.words,
-          start: paragraph.words[0].start
+          start: paragraph.words[0].start,
         },
         // the entities as ranges are each word in the space-joined text,
         // so it needs to be compute for each the offset from the beginning of the paragraph and the length
-        entityRanges: generateEntitiesRanges(paragraph.words, 'punct') // wordAttributeName
+        entityRanges: generateEntitiesRanges(paragraph.words, "punct"), // wordAttributeName
       };
       results.push(draftJsContentBlockParagraph);
     }

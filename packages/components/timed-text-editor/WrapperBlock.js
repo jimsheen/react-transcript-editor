@@ -1,56 +1,55 @@
-import React from 'react';
-import { 
-  EditorBlock, 
-  Modifier, 
-  EditorState, 
+import React from "react";
+import {
+  EditorBlock,
+  Modifier,
+  EditorState,
   SelectionState,
   convertFromRaw,
-  convertToRaw
- } from 'draft-js';
+  convertToRaw,
+} from "draft-js";
 
-import SpeakerLabel from './SpeakerLabel';
+import SpeakerLabel from "./SpeakerLabel";
 // import { shortTimecode, secondsToTimecode } from '../../Util/timecode-converter/';
 
 import {
   shortTimecode,
-  secondsToTimecode
-} from '../../util/timecode-converter';
+  secondsToTimecode,
+} from "../../util/timecode-converter";
 
-import style from './WrapperBlock.module.css';
+import style from "./WrapperBlock.module.css";
 
 const updateSpeakerName = (oldName, newName, state) => {
   const contentToUpdate = convertToRaw(state);
 
-  contentToUpdate.blocks.forEach(block => {
+  contentToUpdate.blocks.forEach((block) => {
     if (block.data.speaker === oldName) {
       block.data.speaker = newName;
     }
-  })
+  });
 
   return convertFromRaw(contentToUpdate);
-}
-
+};
 
 class WrapperBlock extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      speaker: '',
+      speaker: "",
       start: 0,
-      timecodeOffset: this.props.blockProps.timecodeOffset
+      timecodeOffset: this.props.blockProps.timecodeOffset,
     };
   }
 
   componentDidMount() {
     const { block } = this.props;
-    const speaker = block.getData().get('speaker');
-  
-    const start = block.getData().get('start');
+    const speaker = block.getData().get("speaker");
+
+    const start = block.getData().get("start");
 
     this.setState({
       speaker: speaker,
-      start: start
+      start: start,
     });
   }
   // reducing unnecessary re-renders
@@ -59,15 +58,22 @@ class WrapperBlock extends React.Component {
       return true;
     }
 
-    if (nextProps.blockProps.showSpeakers !== this.props.blockProps.showSpeakers) {
+    if (
+      nextProps.blockProps.showSpeakers !== this.props.blockProps.showSpeakers
+    ) {
       return true;
     }
 
-    if (nextProps.blockProps.showTimecodes !== this.props.blockProps.showTimecodes) {
+    if (
+      nextProps.blockProps.showTimecodes !== this.props.blockProps.showTimecodes
+    ) {
       return true;
     }
 
-    if (nextProps.blockProps.timecodeOffset !== this.props.blockProps.timecodeOffset) {
+    if (
+      nextProps.blockProps.timecodeOffset !==
+      this.props.blockProps.timecodeOffset
+    ) {
       return true;
     }
 
@@ -79,49 +85,52 @@ class WrapperBlock extends React.Component {
       return true;
     }
 
-    if(nextProps.block.getData().get('speaker') !== this.state.speaker){
-      console.log('shouldComponentUpdate wrapper speaker', nextProps.block.getData().get('speaker') , this.state.speaker )
+    if (nextProps.block.getData().get("speaker") !== this.state.speaker) {
       return true;
     }
     return false;
   };
 
-  componentDidUpdate  = (prevProps, prevState) =>{
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevProps.block.getData().get("speaker") !== prevState.speaker) {
+      this.setState({
+        speaker: prevProps.block.getData().get("speaker"),
+      });
 
-    if(prevProps.block.getData().get('speaker') !== prevState.speaker){
-        console.log('componentDidUpdate wrapper speaker', prevProps.block.getData().get('speaker') , prevState.speaker );
-        
-        this.setState({
-          speaker: prevProps.block.getData().get('speaker')
-        })
-
-        return true;
-      }
-  }
+      return true;
+    }
+  };
 
   handleOnClickEdit = () => {
     const oldSpeakerName = this.state.speaker;
-    const newSpeakerName = prompt('New Speaker Name?', this.state.speaker);
-    if (newSpeakerName !== '' && newSpeakerName !== null) {
+    const newSpeakerName = prompt("New Speaker Name?", this.state.speaker);
+    if (newSpeakerName !== "" && newSpeakerName !== null) {
       this.setState({ speaker: newSpeakerName });
-      const isUpdateAllSpeakerInstances = confirm(`Would you like to replace all occurrences of ${oldSpeakerName} with ${newSpeakerName}?`);
-     
+      const isUpdateAllSpeakerInstances = confirm(
+        `Would you like to replace all occurrences of ${oldSpeakerName} with ${newSpeakerName}?`
+      );
+
       if (this.props.blockProps.handleAnalyticsEvents) {
         this.props.blockProps.handleAnalyticsEvents({
-          category: 'WrapperBlock',
-          action: 'handleOnClickEdit',
-          name: 'newSpeakerName',
-          value: newSpeakerName
+          category: "WrapperBlock",
+          action: "handleOnClickEdit",
+          name: "newSpeakerName",
+          value: newSpeakerName,
         });
       }
 
-      if(isUpdateAllSpeakerInstances){
+      if (isUpdateAllSpeakerInstances) {
         const ContentState = this.props.blockProps.editorState.getCurrentContent();
-        const contentToUpdateWithSpekaers = updateSpeakerName(oldSpeakerName, newSpeakerName, ContentState);
-        this.props.blockProps.setEditorNewContentStateSpeakersUpdate(contentToUpdateWithSpekaers);
-      }
-      else{
-       // From docs: https://draftjs.org/docs/api-reference-selection-state#keys-and-offsets
+        const contentToUpdateWithSpekaers = updateSpeakerName(
+          oldSpeakerName,
+          newSpeakerName,
+          ContentState
+        );
+        this.props.blockProps.setEditorNewContentStateSpeakersUpdate(
+          contentToUpdateWithSpekaers
+        );
+      } else {
+        // From docs: https://draftjs.org/docs/api-reference-selection-state#keys-and-offsets
         // selection points are tracked as key/offset pairs,
         // where the key value is the key of the ContentBlock where the point is positioned
         // and the offset value is the character offset within the block.
@@ -148,7 +157,9 @@ class WrapperBlock extends React.Component {
           newBlockDataWithSpeakerName
         );
 
-        this.props.blockProps.setEditorNewContentStateSpeakersUpdate(newContentState);
+        this.props.blockProps.setEditorNewContentStateSpeakersUpdate(
+          newContentState
+        );
       }
     }
   };
@@ -157,10 +168,10 @@ class WrapperBlock extends React.Component {
     this.props.blockProps.onWordClick(this.state.start);
     if (this.props.blockProps.handleAnalyticsEvents) {
       this.props.blockProps.handleAnalyticsEvents({
-        category: 'WrapperBlock',
-        action: 'handleTimecodeClick',
-        name: 'onWordClick',
-        value: secondsToTimecode(this.state.start)
+        category: "WrapperBlock",
+        action: "handleTimecodeClick",
+        name: "onWordClick",
+        value: secondsToTimecode(this.state.start),
       });
     }
   };
@@ -173,30 +184,30 @@ class WrapperBlock extends React.Component {
 
     const speakerElement = (
       <SpeakerLabel
-        name={ this.state.speaker }
-        handleOnClickEdit={ this.handleOnClickEdit }
+        name={this.state.speaker}
+        handleOnClickEdit={this.handleOnClickEdit}
         isEditable={this.props.blockProps.isEditable}
       />
     );
 
     const timecodeElement = (
-      <span className={ style.time } onClick={ this.handleTimecodeClick }>
+      <span className={style.time} onClick={this.handleTimecodeClick}>
         {shortTimecode(startTimecode)}
       </span>
     );
 
     return (
-      <div className={ style.WrapperBlock }>
+      <div className={style.WrapperBlock}>
         <div
-          className={ [ style.markers, style.unselectable ].join(' ') }
-          contentEditable={ false }
+          className={[style.markers, style.unselectable].join(" ")}
+          contentEditable={false}
         >
-          {this.props.blockProps.showSpeakers ? speakerElement : ''}
+          {this.props.blockProps.showSpeakers ? speakerElement : ""}
 
-          {this.props.blockProps.showTimecodes ? timecodeElement : ''}
+          {this.props.blockProps.showTimecodes ? timecodeElement : ""}
         </div>
-        <div className={ style.text }>
-          <EditorBlock { ...this.props } />
+        <div className={style.text}>
+          <EditorBlock {...this.props} />
         </div>
       </div>
     );

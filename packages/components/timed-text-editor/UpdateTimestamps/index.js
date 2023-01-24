@@ -1,6 +1,6 @@
-import generateEntitiesRanges from '../../../stt-adapters/generate-entities-ranges';
-import { createEntityMap } from '../../../stt-adapters';
-import alignWords from './stt-align-node.js';
+import generateEntitiesRanges from "../../../stt-adapters/generate-entities-ranges";
+import { createEntityMap } from "../../../stt-adapters";
+import alignWords from "./stt-align-node.js";
 
 const convertContentToText = (content) => {
   let text = [];
@@ -14,14 +14,14 @@ const convertContentToText = (content) => {
 };
 
 const createEntity = (start, end, confidence, word, wordIndex) => {
-  return ({
+  return {
     start: start,
     end: end,
     confidence: confidence,
-    word: word.toLowerCase().replace(/[.?!]/g, ''),
+    word: word.toLowerCase().replace(/[.?!]/g, ""),
     punct: word,
     index: wordIndex,
-  });
+  };
 };
 
 const createContentFromEntityList = (currentContent, newEntities) => {
@@ -35,29 +35,37 @@ const createContentFromEntityList = (currentContent, newEntities) => {
     // currentContentBlock, would not have speaker and start/end time info
     // so for updatedBlock, getting start time from first word in blockEntities
     const wordsInBlock = (block.text.match(/\S+/g) || []).length;
-    const blockEntites = newEntities.slice(totalWords, totalWords + wordsInBlock);
+    const blockEntites = newEntities.slice(
+      totalWords,
+      totalWords + wordsInBlock
+    );
     let speaker = block.data.speaker;
 
     if (!speaker) {
-      console.log('speaker', speaker, block);
-      speaker = 'U_UKN';
+      console.log("speaker", speaker, block);
+      speaker = "U_UKN";
     }
+
     const updatedBlock = {
-      text: blockEntites.map((entry) => entry.punct).join(' '),
-      type: 'paragraph',
+      text: blockEntites.map((entry) => entry.punct).join(" "),
+      type: "paragraph",
       data: {
         speaker: speaker,
         words: blockEntites,
-        start: blockEntites[0].start
+        start:
+          blockEntites[0] && blockEntites[0].start ? blockEntites[0].start : 0,
       },
-      entityRanges: generateEntitiesRanges(blockEntites, 'punct'),
+      entityRanges: generateEntitiesRanges(blockEntites, "punct"),
     };
 
     updatedBlockArray.push(updatedBlock);
     totalWords += wordsInBlock;
   }
 
-  return { blocks: updatedBlockArray, entityMap: createEntityMap(updatedBlockArray) };
+  return {
+    blocks: updatedBlockArray,
+    entityMap: createEntityMap(updatedBlockArray),
+  };
 };
 
 // Update timestamps usign stt-align (bbc).
@@ -81,7 +89,10 @@ const updateTimestamps = (currentContent, originalContent) => {
   const newEntities = result.map((entry, index) => {
     return createEntity(entry.start, entry.end, 0.0, entry.word, index);
   });
-  const updatedContent = createContentFromEntityList(currentContent, newEntities);
+  const updatedContent = createContentFromEntityList(
+    currentContent,
+    newEntities
+  );
 
   return updatedContent;
 };
