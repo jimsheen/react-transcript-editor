@@ -41,7 +41,7 @@ jobs:
           AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Install modules
         run: yarn  install
-      - run: yarn  run addscope
+      - run: yarn  run pre:publish
       - name: Publish to GitHub Packages
         run: yarn  publish
         env:

@@ -135,8 +135,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "publishConfig": {
-    "@jimsheen/react-transcript-editor": "https://npm.pkg.github.com"
-  }
+  ]
 }
