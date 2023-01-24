@@ -1,5 +1,5 @@
 {
-  "name": "@bbc/react-transcript-editor",
+  "name": "@jimsheen/react-transcript-editor",
   "description": "A React component to make transcribing audio and video easier and faster.",
   "version": "3.0.0",
   "keywords": [
@@ -112,23 +112,23 @@
   "contributors": [
     {
       "name": "Pietro Passarelli",
-      "email": "pietro.passarelli@bbc.co.uk",
+      "email": "pietro.passarelli@jimsheen.co.uk",
       "url": "https://github.com/pietrop"
     },
     {
       "name": "James Dooley",
-      "email": "james.dooley@bbc.co.uk",
+      "email": "james.dooley@jimsheen.co.uk",
       "url": "https://github.com/jamesdools"
     }
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bbc/react-transcript-editor/issues"
+    "url": "https://github.com/jimsheen/react-transcript-editor/issues"
   },
-  "homepage": "https://github.com/bbc/react-transcript-editor",
+  "homepage": "https://github.com/jimsheen/react-transcript-editor",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bbc/react-transcript-editor.git"
+    "url": "git+https://github.com/jimsheen/react-transcript-editor.git"
   },
   "browserslist": [
     ">0.2%",
